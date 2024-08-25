@@ -1,73 +1,81 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import Header from './components/Header';
 import HomePage from './components/HomePage';
 import OaxacaStore from './components/OaxacaStore';
+import ProductCard from './components/ProductCard';
 import Footer from './components/Footer';
 
 // Placeholder components for demonstration
-const About = () => <div style={{padding: '20px'}}>About Page</div>;
-const Products = () => <div style={{padding: '20px'}}>Products Page</div>;
-const Contact = () => <div style={{padding: '20px'}}>Contact Page</div>;
+const About = () => <div className="p-5">About Page</div>;
+const Contact = () => <div className="p-5">Contact Page</div>;
 
 const App = () => {
-  const styles = {
-    container: {
-      display: 'flex',
-      flexDirection: 'column',
-      minHeight: '100vh',
-      backgroundColor: '#fff9c4', // Light yellow background
-    },
-    header: {
-      backgroundColor: '#009688', // Teal color
-      color: 'white',
-      padding: '1rem',
-    },
-    nav: {
-      backgroundColor: '#00796b', // Darker teal for nav
-      padding: '10px',
-      display: 'flex',
-      justifyContent: 'center',
-    },
-    link: {
-      color: 'white',
-      margin: '0 10px',
-      textDecoration: 'none',
-      padding: '5px 10px',
-      borderRadius: '5px',
-      transition: 'background-color 0.3s',
-    },
-    activeLink: {
-      backgroundColor: '#004d40', // Even darker teal for active link
-    },
-    content: {
-      flexGrow: 1,
-      padding: '20px',
-    },
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
   };
+
+  const closeDropdown = () => {
+    setIsDropdownOpen(false);
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   return (
     <Router>
-      <div style={styles.container}>
-        <header style={styles.header}>
-          <h1>Oaxaca Artisan Market</h1>
+      <div className="flex flex-col min-h-screen bg-beige-100">
+        <header className="bg-brown-800 text-beige-100 p-4 shadow-md">
+          <div className="container mx-auto flex justify-between items-center">
+            <h1 className="text-2xl font-bold">Oaxaca Artisan Market</h1>
+            <nav className="flex items-center space-x-4">
+              <Link to="/" className="nav-link">Home</Link>
+              <div 
+                className="relative"
+                ref={dropdownRef}
+              >
+                <button 
+                  className="nav-link"
+                  onClick={toggleDropdown}
+                  aria-expanded={isDropdownOpen}
+                >
+                  Products
+                </button>
+                {isDropdownOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-beige-100 rounded-md shadow-lg py-1 z-10">
+                    <Link to="/products/clothing" className="block px-4 py-2 text-sm text-brown-800 hover:bg-brown-200" onClick={closeDropdown}>Clothing</Link>
+                    <Link to="/products/kitchen" className="block px-4 py-2 text-sm text-brown-800 hover:bg-brown-200" onClick={closeDropdown}>Kitchen</Link>
+                    <Link to="/products/art" className="block px-4 py-2 text-sm text-brown-800 hover:bg-brown-200" onClick={closeDropdown}>Art</Link>
+                  </div>
+                )}
+              </div>
+              <Link to="/about" className="nav-link">About</Link>
+              <Link to="/contact" className="nav-link">Contact</Link>
+            </nav>
+          </div>
         </header>
-        <nav style={styles.nav}>
-          <Link to="/" style={styles.link}>Home</Link>
-          <Link to="/product" style={styles.link}>Product</Link>
-          <Link to="/about" style={styles.link}>About</Link>
-          <Link to="/products" style={styles.link}>Products</Link>
-          <Link to="/contact" style={styles.link}>Contact</Link>
-        </nav>
-        <div style={styles.content}>
+        <main className="flex-grow">
           <Routes>
             <Route path="/" element={<HomePage />} />
-            <Route path="/product" element={<OaxacaStore />} />
+            <Route path="/products" element={<ProductCard />} />
+            <Route path="/products/:category" element={<ProductCard />} />
             <Route path="/about" element={<About />} />
-            <Route path="/products" element={<Products />} />
             <Route path="/contact" element={<Contact />} />
           </Routes>
-        </div>
+        </main>
         <Footer />
       </div>
     </Router>
