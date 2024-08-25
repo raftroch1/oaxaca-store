@@ -1,29 +1,20 @@
 import React, { useState } from 'react';
-
-const products = [
-  { id: 1, name: 'Colorful Textiles', price: 49.99, image: '/api/placeholder/300/200' },
-  { id: 2, name: 'Handmade Pottery', price: 39.99, image: '/api/placeholder/300/200' },
-  { id: 3, name: 'Oaxacan Spices', price: 14.99, image: '/api/placeholder/300/200' },
-  { id: 4, name: 'Artisanal Mezcal', price: 59.99, image: '/api/placeholder/300/200' },
-];
+import ProductCard from './components/ProductCard'; // Adjust the path if necessary
 
 const OaxacaStore = () => {
-  const [currentProductIndex, setCurrentProductIndex] = useState(0);
   const [cartItems, setCartItems] = useState([]);
 
-  const nextProduct = () => {
-    setCurrentProductIndex((prevIndex) => (prevIndex + 1) % products.length);
+  const product = {
+    name: "Limited Edition Sports Trainer",
+    price: 189.99,
+    colors: 6,
+    imageUrl: "https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1450&q=80",
+    hoverImageUrl: "https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1450&q=80"
   };
 
-  const prevProduct = () => {
-    setCurrentProductIndex((prevIndex) => (prevIndex - 1 + products.length) % products.length);
-  };
-
-  const addToCart = (product) => {
+  const addToCart = () => {
     setCartItems((prevItems) => [...prevItems, product]);
   };
-
-  const currentProduct = products[currentProductIndex];
 
   const styles = {
     container: {
@@ -59,22 +50,6 @@ const OaxacaStore = () => {
       position: 'relative',
       overflow: 'hidden',
     },
-    productImage: {
-      width: '16rem',
-      height: '16rem',
-      borderRadius: '0.375rem',
-      overflow: 'hidden',
-      boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-    },
-    button: {
-      background: '#009688',
-      color: 'white',
-      padding: '0.5rem 1rem',
-      borderRadius: '0.375rem',
-      border: 'none',
-      cursor: 'pointer',
-      transition: 'background-color 0.3s',
-    },
     cartSection: {
       background: 'linear-gradient(to top right, #ffccbc, #fff9c4)',
       borderRadius: '0.5rem',
@@ -102,23 +77,14 @@ const OaxacaStore = () => {
       
       <main style={styles.main}>
         <div style={styles.productCard}>
-          <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem'}}>
-            <button onClick={prevProduct} style={{...styles.button, fontSize: '1.5rem'}}>
-              &#8249;
-            </button>
-            <div style={{...styles.productImage, background: `url(${currentProduct.image}) center/cover no-repeat`}}></div>
-            <button onClick={nextProduct} style={{...styles.button, fontSize: '1.5rem'}}>
-              &#8250;
-            </button>
-          </div>
-          <h2 style={{fontSize: '1.5rem', fontWeight: 'semibold', marginBottom: '0.5rem'}}>{currentProduct.name}</h2>
-          <p style={{fontSize: '1.25rem', marginBottom: '1rem'}}>${currentProduct.price.toFixed(2)}</p>
-          <button 
-            onClick={() => addToCart(currentProduct)}
-            style={styles.button}
-          >
-            Add to Cart
-          </button>
+          <ProductCard
+            name={product.name}
+            price={product.price}
+            colors={product.colors}
+            imageUrl={product.imageUrl}
+            hoverImageUrl={product.hoverImageUrl}
+            onAddToCart={addToCart}
+          />
         </div>
 
         <div style={styles.cartSection}>
