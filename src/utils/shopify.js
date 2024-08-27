@@ -14,3 +14,13 @@ export const getProducts = async () => {
     return [];
   }
 };
+
+export const getProduct = async (id) => {
+  try {
+    const product = await client.product.fetch(id);
+    return product;
+  } catch (error) {
+    console.error('Error fetching product:', error);
+    return null;
+  }
+};
