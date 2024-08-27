@@ -17,10 +17,24 @@ export const getProducts = async () => {
 
 export const getProduct = async (id) => {
   try {
-    const product = await client.product.fetch(id);
+    console.log('Fetching product with ID:', id);
+    // If the ID is already in the correct format, use it as is
+    // Otherwise, construct the full Shopify Global ID
+    const fullId = id.includes('gid://shopify/Product/') 
+      ? id 
+      : `gid://shopify/Product/${id}`;
+    console.log('Full ID:', fullId);
+    const product = await client.product.fetch(fullId);
+    console.log('Fetched product:', product);
     return product;
   } catch (error) {
     console.error('Error fetching product:', error);
+    if (error.message) {
+      console.error('Error message:', error.message);
+    }
+    if (error.response) {
+      console.error('Error response:', error.response);
+    }
     return null;
   }
 };

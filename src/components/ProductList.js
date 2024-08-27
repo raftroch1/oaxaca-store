@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { getProducts } from '../utils/shopify';
 
-// Define a mapping of product types to categories
 const categoryMapping = {
   'Hoodie': 'clothing',
   'T-Shirt': 'clothing',
@@ -24,13 +23,11 @@ const ProductList = () => {
       try {
         const allProducts = await getProducts();
         
-        // Assign categories to products based on their product type
         const productsWithCategories = allProducts.map(product => ({
           ...product,
           categories: [categoryMapping[product.productType] || 'other']
         }));
 
-        // Filter products by the current category
         const categoryProducts = productsWithCategories.filter(product => 
           product.categories.includes(category.toLowerCase())
         );
@@ -57,7 +54,7 @@ const ProductList = () => {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {products.map((product) => (
-            <Link to={`/product/${product.id}`} key={product.id} className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+            <Link to={`/product/${encodeURIComponent(product.id)}`} key={product.id} className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
               {product.images && product.images[0] && (
                 <img src={product.images[0].src} alt={product.title} className="w-full h-48 object-cover mb-4 rounded" />
               )}

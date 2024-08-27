@@ -7,6 +7,7 @@ import Footer from './components/Footer';
 
 const About = () => <div className="p-5">About Page</div>;
 const Contact = () => <div className="p-5">Contact Page</div>;
+const NotFound = () => <div className="p-5">Page Not Found</div>;
 
 const NavBar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -78,9 +79,11 @@ const App = () => {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/products/:category" element={<ProductList />} />
-            <Route path="/product/:id" element={<ProductCard />} />
+            <Route path="/product/:fullId" element={<ProductCard />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/not-found" element={<NotFound />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
         <Footer />
